@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!--
+ * MageShop | Entrega99
+ *
+ * @vendor  MageShop
+ * @package Entrega99
+ -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:App/etc/routes.xsd">
+    <router id="admin">
+        <route id="entrega99" frontName="entrega99">
+            <module name="MageShop_Entrega99" before="Magento_Backend"/>
+        </route>
+    </router>
+</config>

@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+<!--
+ * MageShop | Entrega99
+ *
+ * @vendor  MageShop
+ * @package Entrega99
+ -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+
+    <!-- Repository interfaces -->
+    <preference for="MageShop\Entrega99\Api\WaypointRepositoryInterface"
+                type="MageShop\Entrega99\Model\WaypointRepository"/>
+    <preference for="MageShop\Entrega99\Api\TokenRepositoryInterface"
+                type="MageShop\Entrega99\Model\TokenRepository"/>
+    <preference for="MageShop\Entrega99\Api\OrderShipmentRepositoryInterface"
+                type="MageShop\Entrega99\Model\OrderShipmentRepository"/>
+    <preference for="MageShop\Entrega99\Api\WebhookEventRepositoryInterface"
+                type="MageShop\Entrega99\Model\WebhookEventRepository"/>
+
+    <!-- Data interfaces -->
+    <preference for="MageShop\Entrega99\Api\Data\WaypointInterface"
+                type="MageShop\Entrega99\Model\Waypoint"/>
+    <preference for="MageShop\Entrega99\Api\Data\TokenInterface"
+                type="MageShop\Entrega99\Model\Token"/>
+    <preference for="MageShop\Entrega99\Api\Data\OrderShipmentInterface"
+                type="MageShop\Entrega99\Model\OrderShipment"/>
+    <preference for="MageShop\Entrega99\Api\Data\WebhookEventInterface"
+                type="MageShop\Entrega99\Model\WebhookEvent"/>
+
+    <!-- Webhook (REST) -->
+    <preference for="MageShop\Entrega99\Api\WebhookInterface"
+                type="MageShop\Entrega99\Model\Api\Webhook"/>
+
+    <!-- Geocoder -->
+    <preference for="MageShop\Entrega99\Api\GeocoderInterface"
+                type="MageShop\Entrega99\Model\Geocoder\Pool"/>
+
+    <!-- Geocoder pool: injected providers keyed by code -->
+    <type name="MageShop\Entrega99\Model\Geocoder\Pool">
+        <arguments>
+            <argument name="providers" xsi:type="array">
+                <item name="nominatim" xsi:type="object">MageShop\Entrega99\Model\Geocoder\Nominatim</item>
+                <item name="google_maps" xsi:type="object">MageShop\Entrega99\Model\Geocoder\GoogleMaps</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <!-- Dedicated logger: channel "entrega99", writes to var/log/entrega99.log -->
+    <virtualType name="MageShop\Entrega99\Logger\Handler\BaseHandler"
+                 type="MageShop\Entrega99\Logger\Handler\Base">
+        <arguments>
+            <argument name="filesystem" xsi:type="object">Magento\Framework\Filesystem\Driver\File</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="MageShop\Entrega99\Logger\Logger" type="Monolog\Logger">
+        <arguments>
+            <argument name="name" xsi:type="string">entrega99</argument>
+            <argument name="handlers" xsi:type="array">
+                <item name="system" xsi:type="object">MageShop\Entrega99\Logger\Handler\BaseHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Inject the dedicated logger wherever \MageShop\Entrega99\Logger\Logger is requested -->
+    <type name="MageShop\Entrega99\Helper\Data">
+        <arguments>
+            <argument name="logger" xsi:type="object">MageShop\Entrega99\Logger\Logger</argument>
+        </arguments>
+    </type>
+
+    <!-- Admin grid for Pickup Locations: wires the listing data source to a collection over our table -->
+    <virtualType name="MageShop\Entrega99\Model\ResourceModel\Waypoint\Grid\Collection"
+                 type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">mageshop_entrega99_waypoint</argument>
+            <argument name="resourceModel" xsi:type="string">MageShop\Entrega99\Model\ResourceModel\Waypoint</argument>
+        </arguments>
+    </virtualType>
+
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="entrega99_waypoint_listing_data_source" xsi:type="string">MageShop\Entrega99\Model\ResourceModel\Waypoint\Grid\Collection</item>
+            </argument>
+        </arguments>
+    </type>
+
+</config>

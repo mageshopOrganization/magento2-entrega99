@@ -1,0 +1,115 @@
+<?php
+/**
+ * MageShop | Entrega99 - Order View Panel
+ *
+ * @var \MageShop\Entrega99\Block\Adminhtml\Order\View\ShipmentInfo $block
+ */
+
+use Magento\Framework\Escaper;
+
+if (!$block->isEntrega99Order()) {
+    return;
+}
+
+/** @var Escaper $escaper */
+$shipment = $block->getShipment();
+$driver = $block->getDriverInfoAsArray($shipment);
+?>
+<section class="admin__page-section" style="margin-top:20px;">
+    <div class="admin__page-section-title">
+        <span class="title"><?= /* @noEscape */ __('99Entrega') ?></span>
+    </div>
+
+    <div class="admin__page-section-content">
+        <?php if ($shipment === null): ?>
+            <p><?= /* @noEscape */ __('No 99Entrega delivery record for this order yet.') ?></p>
+        <?php else: ?>
+            <table class="data-table admin__table-primary">
+                <tbody>
+                    <tr>
+                        <th><?= /* @noEscape */ __('Status') ?></th>
+                        <td><strong><?= $escaper->escapeHtml($shipment->getStatus()) ?></strong></td>
+                    </tr>
+                    <?php if ($shipment->getEntrega99OrderId()): ?>
+                    <tr>
+                        <th><?= /* @noEscape */ __('99Entrega Order ID') ?></th>
+                        <td><?= $escaper->escapeHtml($shipment->getEntrega99OrderId()) ?></td>
+                    </tr>
+                    <?php endif; ?>
+                    <?php if ($shipment->getVehicleType()): ?>
+                    <tr>
+                        <th><?= /* @noEscape */ __('Vehicle') ?></th>
+                        <td><?= $escaper->escapeHtml($shipment->getVehicleType()) ?></td>
+                    </tr>
+                    <?php endif; ?>
+                    <?php if ($shipment->getFeeCents() !== null): ?>
+                    <tr>
+                        <th><?= /* @noEscape */ __('Fee') ?></th>
+                        <td><?= $escaper->escapeHtml(($shipment->getCurrency() ?: 'R$') . ' ' . number_format($shipment->getFeeCents() / 100, 2, ',', '.')) ?></td>
+                    </tr>
+                    <?php endif; ?>
+                    <?php if ($shipment->getTrackingLink()): ?>
+                    <tr>
+                        <th><?= /* @noEscape */ __('Tracking') ?></th>
+                        <td>
+                            <a href="<?= $escaper->escapeUrl($shipment->getTrackingLink()) ?>" target="_blank">
+                                <?= $escaper->escapeHtml($shipment->getTrackingLink()) ?>
+                            </a>
+                        </td>
+                    </tr>
+                    <?php endif; ?>
+                    <?php if ($shipment->getPickupCode()): ?>
+                    <tr>
+                        <th><?= /* @noEscape */ __('Pickup Code') ?></th>
+                        <td><code><?= $escaper->escapeHtml($shipment->getPickupCode()) ?></code></td>
+                    </tr>
+                    <?php endif; ?>
+                    <?php if ($shipment->getDropoffCode()): ?>
+                    <tr>
+                        <th><?= /* @noEscape */ __('Dropoff Code') ?></th>
+                        <td><code><?= $escaper->escapeHtml($shipment->getDropoffCode()) ?></code></td>
+                    </tr>
+                    <?php endif; ?>
+                    <?php if (!empty($driver)): ?>
+                    <tr>
+                        <th><?= /* @noEscape */ __('Driver') ?></th>
+                        <td>
+                            <?= $escaper->escapeHtml((string)($driver['name'] ?? '—')) ?>
+                            <?php if (!empty($driver['phone'])): ?>
+                                — <?= $escaper->escapeHtml((string)$driver['phone']) ?>
+                            <?php endif; ?>
+                            <?php if (!empty($driver['vehicle_plate']) || !empty($driver['vehicle_model'])): ?>
+                                <br><small>
+                                <?= $escaper->escapeHtml((string)($driver['vehicle_model'] ?? '')) ?>
+                                <?= $escaper->escapeHtml((string)($driver['vehicle_plate'] ?? '')) ?>
+                                </small>
+                            <?php endif; ?>
+                        </td>
+                    </tr>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+        <?php endif; ?>
+
+        <div class="actions" style="margin-top:12px;">
+            <?php if ($block->canCreate($shipment)): ?>
+                <form action="<?= $escaper->escapeUrl($block->getCreateUrl()) ?>" method="post" style="display:inline;">
+                    <input type="hidden" name="form_key" value="<?= $escaper->escapeHtmlAttr($block->getFormKey()) ?>">
+                    <button type="submit" class="action-default primary">
+                        <span><?= /* @noEscape */ __('Create 99Entrega Delivery') ?></span>
+                    </button>
+                </form>
+            <?php endif; ?>
+            <?php if ($block->canCancel($shipment)): ?>
+                <form action="<?= $escaper->escapeUrl($block->getCancelUrl()) ?>" method="post"
+                      style="display:inline;"
+                      onsubmit="return confirm('<?= /* @noEscape */ __('Cancel the 99Entrega delivery?') ?>');">
+                    <input type="hidden" name="form_key" value="<?= $escaper->escapeHtmlAttr($block->getFormKey()) ?>">
+                    <button type="submit" class="action-default">
+                        <span><?= /* @noEscape */ __('Cancel 99Entrega Delivery') ?></span>
+                    </button>
+                </form>
+            <?php endif; ?>
+        </div>
+    </div>
+</section>

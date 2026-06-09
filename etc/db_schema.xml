@@ -1,0 +1,193 @@
+<?xml version="1.0"?>
+<!--
+ * MageShop | Entrega99
+ *
+ * @vendor  MageShop
+ * @package Entrega99
+ -->
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+
+    <!--
+        Pickup locations (waypoints).
+        Each row is a physical origin from which orders are dispatched via 99Entrega.
+        Optionally linked to a Magento MSI Source via msi_source_code.
+    -->
+    <table name="mageshop_entrega99_waypoint" resource="default" engine="innodb" comment="Entrega99 pickup locations">
+        <column xsi:type="int" name="waypoint_id" padding="10" unsigned="true" nullable="false" identity="true" comment="Waypoint ID"/>
+        <column xsi:type="smallint" name="store_id" padding="5" unsigned="true" nullable="true" comment="Store View ID"/>
+        <column xsi:type="varchar" name="msi_source_code" length="255" nullable="true" comment="MSI Source Code (optional)"/>
+        <column xsi:type="varchar" name="name" length="255" nullable="false" comment="Waypoint display name"/>
+        <column xsi:type="boolean" name="active" nullable="false" default="true" comment="Is active"/>
+        <column xsi:type="varchar" name="contact_name" length="255" nullable="true" comment="Contact name at pickup"/>
+        <column xsi:type="varchar" name="telephone" length="32" nullable="true" comment="Pickup phone"/>
+        <column xsi:type="varchar" name="email" length="255" nullable="true" comment="Pickup contact email"/>
+        <column xsi:type="varchar" name="address" length="500" nullable="false" comment="Street address"/>
+        <column xsi:type="varchar" name="number" length="32" nullable="true" comment="Address number"/>
+        <column xsi:type="varchar" name="complement" length="255" nullable="true" comment="Address complement"/>
+        <column xsi:type="varchar" name="neighborhood" length="255" nullable="true" comment="Neighborhood"/>
+        <column xsi:type="varchar" name="city" length="255" nullable="false" comment="City"/>
+        <column xsi:type="varchar" name="region" length="64" nullable="true" comment="State (UF)"/>
+        <column xsi:type="varchar" name="postcode" length="16" nullable="false" comment="Postal code (CEP)"/>
+        <column xsi:type="varchar" name="country" length="3" nullable="false" default="BR" comment="ISO country code"/>
+        <column xsi:type="decimal" name="latitude" scale="7" precision="10" nullable="true" comment="Latitude"/>
+        <column xsi:type="decimal" name="longitude" scale="7" precision="10" nullable="true" comment="Longitude"/>
+        <column xsi:type="text" name="instructions" nullable="true" comment="Pickup notes for the driver"/>
+        <column xsi:type="varchar" name="monday_open" length="5" nullable="true" comment="Mon open HH:MM"/>
+        <column xsi:type="varchar" name="monday_close" length="5" nullable="true" comment="Mon close HH:MM"/>
+        <column xsi:type="varchar" name="tuesday_open" length="5" nullable="true" comment="Tue open"/>
+        <column xsi:type="varchar" name="tuesday_close" length="5" nullable="true" comment="Tue close"/>
+        <column xsi:type="varchar" name="wednesday_open" length="5" nullable="true" comment="Wed open"/>
+        <column xsi:type="varchar" name="wednesday_close" length="5" nullable="true" comment="Wed close"/>
+        <column xsi:type="varchar" name="thursday_open" length="5" nullable="true" comment="Thu open"/>
+        <column xsi:type="varchar" name="thursday_close" length="5" nullable="true" comment="Thu close"/>
+        <column xsi:type="varchar" name="friday_open" length="5" nullable="true" comment="Fri open"/>
+        <column xsi:type="varchar" name="friday_close" length="5" nullable="true" comment="Fri close"/>
+        <column xsi:type="varchar" name="saturday_open" length="5" nullable="true" comment="Sat open"/>
+        <column xsi:type="varchar" name="saturday_close" length="5" nullable="true" comment="Sat close"/>
+        <column xsi:type="varchar" name="sunday_open" length="5" nullable="true" comment="Sun open"/>
+        <column xsi:type="varchar" name="sunday_close" length="5" nullable="true" comment="Sun close"/>
+        <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="Created at"/>
+        <column xsi:type="timestamp" name="updated_at" on_update="true" nullable="false" default="CURRENT_TIMESTAMP" comment="Updated at"/>
+
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="waypoint_id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="MAGESHOP_ENTREGA99_WP_STORE_ID_STORE_STORE_ID"
+                    table="mageshop_entrega99_waypoint" column="store_id"
+                    referenceTable="store" referenceColumn="store_id" onDelete="SET NULL"/>
+        <index referenceId="MAGESHOP_ENTREGA99_WP_STORE_ID" indexType="btree">
+            <column name="store_id"/>
+        </index>
+        <index referenceId="MAGESHOP_ENTREGA99_WP_MSI_SRC" indexType="btree">
+            <column name="msi_source_code"/>
+        </index>
+        <index referenceId="MAGESHOP_ENTREGA99_WP_ACTIVE" indexType="btree">
+            <column name="active"/>
+        </index>
+    </table>
+
+    <!--
+        OAuth Bearer token cache (TTL 2h).
+        Keyed by (store_id, scope). Refreshed proactively before expiry.
+    -->
+    <table name="mageshop_entrega99_token" resource="default" engine="innodb" comment="Entrega99 OAuth token cache">
+        <column xsi:type="int" name="entity_id" padding="10" unsigned="true" nullable="false" identity="true" comment="Token ID"/>
+        <column xsi:type="smallint" name="store_id" padding="5" unsigned="true" nullable="false" default="0" comment="Store ID (0 = default)"/>
+        <column xsi:type="text" name="access_token" nullable="false" comment="Bearer access token"/>
+        <column xsi:type="varchar" name="token_type" length="32" nullable="false" default="Bearer" comment="Token type"/>
+        <column xsi:type="varchar" name="scope" length="64" nullable="false" comment="Token scope"/>
+        <column xsi:type="timestamp" name="expires_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="Expiration timestamp"/>
+        <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="Created at"/>
+
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="entity_id"/>
+        </constraint>
+        <constraint xsi:type="unique" referenceId="MAGESHOP_ENTREGA99_TKN_STORE_SCOPE">
+            <column name="store_id"/>
+            <column name="scope"/>
+        </constraint>
+        <index referenceId="MAGESHOP_ENTREGA99_TKN_EXPIRES_AT" indexType="btree">
+            <column name="expires_at"/>
+        </index>
+    </table>
+
+    <!--
+        Mapping between Magento order and 99Entrega delivery.
+        One row per Magento order that uses the 99Entrega carrier.
+    -->
+    <table name="mageshop_entrega99_order_shipment" resource="default" engine="innodb" comment="Entrega99 order ↔ delivery mapping">
+        <column xsi:type="int" name="entity_id" padding="10" unsigned="true" nullable="false" identity="true" comment="Shipment ID"/>
+        <column xsi:type="int" name="order_id" padding="10" unsigned="true" nullable="false" comment="Magento sales_order.entity_id"/>
+        <column xsi:type="smallint" name="store_id" padding="5" unsigned="true" nullable="true" comment="Store ID"/>
+        <column xsi:type="varchar" name="increment_id" length="50" nullable="false" comment="Magento order increment_id"/>
+        <column xsi:type="int" name="waypoint_id" padding="10" unsigned="true" nullable="true" comment="Pickup waypoint used"/>
+        <column xsi:type="varchar" name="external_order_id" length="127" nullable="true" comment="external_order_id sent to 99 (= increment_id)"/>
+        <column xsi:type="varchar" name="entrega99_order_id" length="64" nullable="true" comment="order_id returned by 99"/>
+        <column xsi:type="varchar" name="estimate_id" length="64" nullable="true" comment="Last estimate_id from 99"/>
+        <column xsi:type="varchar" name="vehicle_type" length="32" nullable="true" comment="entrega_moto | entrega_car"/>
+        <column xsi:type="varchar" name="status" length="64" nullable="false" default="pending" comment="Local sync status"/>
+        <column xsi:type="text" name="tracking_link" nullable="true" comment="Tracking URL"/>
+        <column xsi:type="text" name="driver_info" nullable="true" comment="Driver data (JSON)"/>
+        <column xsi:type="varchar" name="pickup_code" length="16" nullable="true" comment="Pickup verification code"/>
+        <column xsi:type="varchar" name="dropoff_code" length="16" nullable="true" comment="Dropoff verification code"/>
+        <column xsi:type="int" name="fee_cents" padding="10" unsigned="true" nullable="true" comment="Fee charged by 99 in cents"/>
+        <column xsi:type="varchar" name="currency" length="8" nullable="true" comment="Currency code"/>
+        <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="Created at"/>
+        <column xsi:type="timestamp" name="updated_at" on_update="true" nullable="false" default="CURRENT_TIMESTAMP" comment="Updated at"/>
+
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="entity_id"/>
+        </constraint>
+        <constraint xsi:type="unique" referenceId="MAGESHOP_ENTREGA99_OS_ORDER_ID">
+            <column name="order_id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="MAGESHOP_ENTREGA99_OS_ORDER_ID_SALES_ORDER_ENTITY_ID"
+                    table="mageshop_entrega99_order_shipment" column="order_id"
+                    referenceTable="sales_order" referenceColumn="entity_id" onDelete="CASCADE"/>
+        <constraint xsi:type="foreign" referenceId="MAGESHOP_ENTREGA99_OS_WAYPOINT_ID_WP_WAYPOINT_ID"
+                    table="mageshop_entrega99_order_shipment" column="waypoint_id"
+                    referenceTable="mageshop_entrega99_waypoint" referenceColumn="waypoint_id" onDelete="SET NULL"/>
+        <index referenceId="MAGESHOP_ENTREGA99_OS_INCREMENT_ID" indexType="btree">
+            <column name="increment_id"/>
+        </index>
+        <index referenceId="MAGESHOP_ENTREGA99_OS_EXTERNAL_ORDER_ID" indexType="btree">
+            <column name="external_order_id"/>
+        </index>
+        <index referenceId="MAGESHOP_ENTREGA99_OS_ENTREGA99_ORDER_ID" indexType="btree">
+            <column name="entrega99_order_id"/>
+        </index>
+        <index referenceId="MAGESHOP_ENTREGA99_OS_STATUS" indexType="btree">
+            <column name="status"/>
+        </index>
+    </table>
+
+    <!--
+        Extension columns on sales_order: store the 99Entrega context captured at
+        checkout (waypoint, vehicle, estimate, fee, currency) so it survives the
+        place_before → save_after observer hand-off without relying on the HTTP
+        checkout session.
+    -->
+    <table name="sales_order">
+        <column xsi:type="int" name="entrega99_waypoint_id" padding="10" unsigned="true" nullable="true" comment="99Entrega: waypoint used at quote time"/>
+        <column xsi:type="varchar" name="entrega99_vehicle_type" length="32" nullable="true" comment="99Entrega: vehicle type at quote time"/>
+        <column xsi:type="varchar" name="entrega99_estimate_id" length="64" nullable="true" comment="99Entrega: last estimate_id from checkout"/>
+        <column xsi:type="int" name="entrega99_fee_cents" padding="10" unsigned="true" nullable="true" comment="99Entrega: fee shown at checkout (cents)"/>
+        <column xsi:type="varchar" name="entrega99_currency" length="8" nullable="true" comment="99Entrega: currency code at quote time"/>
+    </table>
+
+    <!--
+        Webhook event log for idempotency / deduplication.
+        Every event_id is recorded; duplicates are ignored.
+    -->
+    <table name="mageshop_entrega99_webhook_event" resource="default" engine="innodb" comment="Entrega99 webhook events received">
+        <column xsi:type="int" name="entity_id" padding="10" unsigned="true" nullable="false" identity="true" comment="Internal ID"/>
+        <column xsi:type="varchar" name="event_id" length="128" nullable="false" comment="event_id from 99 (idempotency key)"/>
+        <column xsi:type="varchar" name="event_type" length="64" nullable="false" comment="Event type (DriverAccepted, etc.)"/>
+        <column xsi:type="varchar" name="entrega99_order_id" length="64" nullable="true" comment="Related 99 order_id"/>
+        <column xsi:type="varchar" name="external_order_id" length="127" nullable="true" comment="Related external_order_id"/>
+        <column xsi:type="int" name="event_timestamp" padding="10" unsigned="true" nullable="true" comment="Event timestamp from 99 (unix)"/>
+        <column xsi:type="text" name="payload" nullable="true" comment="Raw event payload (JSON)"/>
+        <column xsi:type="boolean" name="processed" nullable="false" default="false" comment="Has been processed"/>
+        <column xsi:type="text" name="process_message" nullable="true" comment="Processing result message (errors etc)"/>
+        <column xsi:type="timestamp" name="received_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="Received at"/>
+        <column xsi:type="timestamp" name="processed_at" on_update="false" nullable="true" comment="Processed at"/>
+
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="entity_id"/>
+        </constraint>
+        <constraint xsi:type="unique" referenceId="MAGESHOP_ENTREGA99_WHE_EVENT_ID">
+            <column name="event_id"/>
+        </constraint>
+        <index referenceId="MAGESHOP_ENTREGA99_WHE_ENTREGA99_ORDER_ID" indexType="btree">
+            <column name="entrega99_order_id"/>
+        </index>
+        <index referenceId="MAGESHOP_ENTREGA99_WHE_EXTERNAL_ORDER_ID" indexType="btree">
+            <column name="external_order_id"/>
+        </index>
+        <index referenceId="MAGESHOP_ENTREGA99_WHE_RECEIVED_AT" indexType="btree">
+            <column name="received_at"/>
+        </index>
+    </table>
+
+</schema>

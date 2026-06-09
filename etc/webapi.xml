@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!--
+ * MageShop | Entrega99
+ *
+ * @vendor  MageShop
+ * @package Entrega99
+ -->
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
+
+    <!--
+        Public webhook endpoint that 99Entrega calls to push delivery events.
+        Authentication is performed inside the controller by validating the
+        HMAC-SHA256 signature on the raw body (header X-Webhook-Signature).
+        The WebAPI auth is therefore anonymous.
+    -->
+    <route url="/V1/entrega99/webhook" method="POST">
+        <service class="MageShop\Entrega99\Api\WebhookInterface" method="receive"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+
+</routes>

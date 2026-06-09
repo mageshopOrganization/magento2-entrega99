@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!--
+ * MageShop | Entrega99
+ *
+ * @vendor  MageShop
+ * @package Entrega99
+ -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Acl/etc/acl.xsd">
+    <acl>
+        <resources>
+            <resource id="Magento_Backend::admin">
+                <resource id="Magento_Backend::stores">
+                    <resource id="Magento_Backend::stores_settings">
+                        <resource id="MageShop_Entrega99::waypoint"
+                                  title="Pickup Locations (99Entrega)"
+                                  translate="title"
+                                  sortOrder="100"/>
+                    </resource>
+                </resource>
+                <resource id="Magento_Sales::sales">
+                    <resource id="Magento_Sales::sales_operation">
+                        <resource id="Magento_Sales::sales_order">
+                            <resource id="MageShop_Entrega99::shipment_create"
+                                      title="Create 99Entrega Shipment"
+                                      translate="title"/>
+                            <resource id="MageShop_Entrega99::shipment_cancel"
+                                      title="Cancel 99Entrega Shipment"
+                                      translate="title"/>
+                        </resource>
+                    </resource>
+                </resource>
+            </resource>
+        </resources>
+    </acl>
+</config>

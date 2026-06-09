@@ -1,0 +1,135 @@
+{
+    "mageshop_entrega99_waypoint": {
+        "column": {
+            "waypoint_id": true,
+            "store_id": true,
+            "msi_source_code": true,
+            "name": true,
+            "active": true,
+            "contact_name": true,
+            "telephone": true,
+            "email": true,
+            "address": true,
+            "number": true,
+            "complement": true,
+            "neighborhood": true,
+            "city": true,
+            "region": true,
+            "postcode": true,
+            "country": true,
+            "latitude": true,
+            "longitude": true,
+            "instructions": true,
+            "monday_open": true,
+            "monday_close": true,
+            "tuesday_open": true,
+            "tuesday_close": true,
+            "wednesday_open": true,
+            "wednesday_close": true,
+            "thursday_open": true,
+            "thursday_close": true,
+            "friday_open": true,
+            "friday_close": true,
+            "saturday_open": true,
+            "saturday_close": true,
+            "sunday_open": true,
+            "sunday_close": true,
+            "created_at": true,
+            "updated_at": true
+        },
+        "index": {
+            "MAGESHOP_ENTREGA99_WP_STORE_ID": true,
+            "MAGESHOP_ENTREGA99_WP_MSI_SRC": true,
+            "MAGESHOP_ENTREGA99_WP_ACTIVE": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "MAGESHOP_ENTREGA99_WP_STORE_ID_STORE_STORE_ID": true
+        }
+    },
+    "mageshop_entrega99_token": {
+        "column": {
+            "entity_id": true,
+            "store_id": true,
+            "access_token": true,
+            "token_type": true,
+            "scope": true,
+            "expires_at": true,
+            "created_at": true
+        },
+        "index": {
+            "MAGESHOP_ENTREGA99_TKN_EXPIRES_AT": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "MAGESHOP_ENTREGA99_TKN_STORE_SCOPE": true
+        }
+    },
+    "mageshop_entrega99_order_shipment": {
+        "column": {
+            "entity_id": true,
+            "order_id": true,
+            "store_id": true,
+            "increment_id": true,
+            "waypoint_id": true,
+            "external_order_id": true,
+            "entrega99_order_id": true,
+            "estimate_id": true,
+            "vehicle_type": true,
+            "status": true,
+            "tracking_link": true,
+            "driver_info": true,
+            "pickup_code": true,
+            "dropoff_code": true,
+            "fee_cents": true,
+            "currency": true,
+            "created_at": true,
+            "updated_at": true
+        },
+        "index": {
+            "MAGESHOP_ENTREGA99_OS_INCREMENT_ID": true,
+            "MAGESHOP_ENTREGA99_OS_EXTERNAL_ORDER_ID": true,
+            "MAGESHOP_ENTREGA99_OS_ENTREGA99_ORDER_ID": true,
+            "MAGESHOP_ENTREGA99_OS_STATUS": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "MAGESHOP_ENTREGA99_OS_ORDER_ID": true,
+            "MAGESHOP_ENTREGA99_OS_ORDER_ID_SALES_ORDER_ENTITY_ID": true,
+            "MAGESHOP_ENTREGA99_OS_WAYPOINT_ID_WP_WAYPOINT_ID": true
+        }
+    },
+    "sales_order": {
+        "column": {
+            "entrega99_waypoint_id": true,
+            "entrega99_vehicle_type": true,
+            "entrega99_estimate_id": true,
+            "entrega99_fee_cents": true,
+            "entrega99_currency": true
+        }
+    },
+    "mageshop_entrega99_webhook_event": {
+        "column": {
+            "entity_id": true,
+            "event_id": true,
+            "event_type": true,
+            "entrega99_order_id": true,
+            "external_order_id": true,
+            "event_timestamp": true,
+            "payload": true,
+            "processed": true,
+            "process_message": true,
+            "received_at": true,
+            "processed_at": true
+        },
+        "index": {
+            "MAGESHOP_ENTREGA99_WHE_ENTREGA99_ORDER_ID": true,
+            "MAGESHOP_ENTREGA99_WHE_EXTERNAL_ORDER_ID": true,
+            "MAGESHOP_ENTREGA99_WHE_RECEIVED_AT": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "MAGESHOP_ENTREGA99_WHE_EVENT_ID": true
+        }
+    }
+}

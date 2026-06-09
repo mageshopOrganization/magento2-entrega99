@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * MageShop | Entrega99
+ *
+ * @vendor  MageShop
+ * @package Entrega99
+ -->
+<form xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">entrega99_waypoint_form.entrega99_waypoint_form_data_source</item>
+        </item>
+        <item name="label" xsi:type="string" translate="true">Pickup Location</item>
+        <item name="config" xsi:type="array">
+            <item name="dataScope" xsi:type="string">data</item>
+            <item name="namespace" xsi:type="string">entrega99_waypoint_form</item>
+        </item>
+        <item name="template" xsi:type="string">templates/form/collapsible</item>
+    </argument>
+
+    <settings>
+        <buttons>
+            <button name="back" class="MageShop\Entrega99\Block\Adminhtml\Waypoint\Edit\BackButton"/>
+            <button name="delete" class="MageShop\Entrega99\Block\Adminhtml\Waypoint\Edit\DeleteButton"/>
+            <button name="save" class="MageShop\Entrega99\Block\Adminhtml\Waypoint\Edit\SaveButton"/>
+        </buttons>
+        <namespace>entrega99_waypoint_form</namespace>
+        <dataScope>data</dataScope>
+        <deps>
+            <dep>entrega99_waypoint_form.entrega99_waypoint_form_data_source</dep>
+        </deps>
+    </settings>
+
+    <dataSource name="entrega99_waypoint_form_data_source">
+        <argument name="dataProvider" xsi:type="configurableObject">
+            <argument name="class" xsi:type="string">MageShop\Entrega99\Model\Waypoint\DataProvider</argument>
+            <argument name="name" xsi:type="string">entrega99_waypoint_form_data_source</argument>
+            <argument name="primaryFieldName" xsi:type="string">waypoint_id</argument>
+            <argument name="requestFieldName" xsi:type="string">waypoint_id</argument>
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="submit_url" xsi:type="url" path="entrega99/waypoint/save"/>
+                </item>
+            </argument>
+        </argument>
+        <argument name="data" xsi:type="array">
+            <item name="js_config" xsi:type="array">
+                <item name="component" xsi:type="string">Magento_Ui/js/form/provider</item>
+            </item>
+        </argument>
+    </dataSource>
+
+    <!-- ============ GENERAL ============ -->
+    <fieldset name="general">
+        <settings>
+            <label translate="true">General</label>
+        </settings>
+
+        <field name="name" formElement="input">
+            <settings>
+                <label translate="true">Name</label>
+                <dataType>text</dataType>
+                <validation>
+                    <rule name="required-entry" xsi:type="boolean">true</rule>
+                </validation>
+            </settings>
+        </field>
+
+        <field name="active" formElement="checkbox">
+            <settings>
+                <label translate="true">Active</label>
+                <dataType>boolean</dataType>
+            </settings>
+            <formElements>
+                <checkbox>
+                    <settings>
+                        <valueMap>
+                            <map name="false" xsi:type="number">0</map>
+                            <map name="true" xsi:type="number">1</map>
+                        </valueMap>
+                        <prefer>toggle</prefer>
+                    </settings>
+                </checkbox>
+            </formElements>
+        </field>
+
+        <field name="store_id" formElement="select">
+            <settings>
+                <label translate="true">Store View</label>
+                <notice translate="true">Single store per waypoint. Choose "All Stores" if this pickup serves every store view. To cover multiple specific stores, create one waypoint per store.</notice>
+                <dataType>text</dataType>
+            </settings>
+            <formElements>
+                <select>
+                    <settings>
+                        <options class="MageShop\Entrega99\Model\Config\Source\StoreOption"/>
+                    </settings>
+                </select>
+            </formElements>
+        </field>
+
+        <field name="msi_source_code" formElement="input">
+            <settings>
+                <label translate="true">MSI Source Code (optional)</label>
+                <notice translate="true">Single source code. Leave empty if not using Magento Inventory multi-source. For multiple sources, create one waypoint per source.</notice>
+                <dataType>text</dataType>
+            </settings>
+        </field>
+
+        <field name="contact_name" formElement="input">
+            <settings>
+                <label translate="true">Contact Name</label>
+                <notice translate="true">Name of the person who hands the package to the driver.</notice>
+                <dataType>text</dataType>
+            </settings>
+        </field>
+
+        <field name="telephone" formElement="input">
+            <settings>
+                <label translate="true">Telephone</label>
+                <notice translate="true">Any format accepted: (11) 99999-9999, 11999999999, or +5511999999999. Will be normalized to +55XXXXXXXXXXX automatically.</notice>
+                <dataType>text</dataType>
+            </settings>
+        </field>
+
+        <field name="email" formElement="input">
+            <settings>
+                <label translate="true">Email</label>
+                <dataType>text</dataType>
+            </settings>
+        </field>
+    </fieldset>
+
+    <!-- ============ ADDRESS ============ -->
+    <fieldset name="address">
+        <settings>
+            <label translate="true">Address</label>
+        </settings>
+
+        <field name="address" formElement="input">
+            <settings>
+                <label translate="true">Street</label>
+                <dataType>text</dataType>
+                <validation>
+                    <rule name="required-entry" xsi:type="boolean">true</rule>
+                </validation>
+            </settings>
+        </field>
+
+        <field name="number" formElement="input">
+            <settings>
+                <label translate="true">Number</label>
+                <dataType>text</dataType>
+            </settings>
+        </field>
+
+        <field name="complement" formElement="input">
+            <settings>
+                <label translate="true">Complement</label>
+                <dataType>text</dataType>
+            </settings>
+        </field>
+
+        <field name="neighborhood" formElement="input">
+            <settings>
+                <label translate="true">Neighborhood</label>
+                <dataType>text</dataType>
+            </settings>
+        </field>
+
+        <field name="city" formElement="input">
+            <settings>
+                <label translate="true">City</label>
+                <dataType>text</dataType>
+                <validation>
+                    <rule name="required-entry" xsi:type="boolean">true</rule>
+                </validation>
+            </settings>
+        </field>
+
+        <field name="region" formElement="input">
+            <settings>
+                <label translate="true">State (UF)</label>
+                <dataType>text</dataType>
+            </settings>
+        </field>
+
+        <field name="postcode" formElement="input">
+            <settings>
+                <label translate="true">Postcode (CEP)</label>
+                <notice translate="true">8 digits, with or without dash. e.g. 80540-000 or 80540000.</notice>
+                <dataType>text</dataType>
+                <validation>
+                    <rule name="required-entry" xsi:type="boolean">true</rule>
+                </validation>
+            </settings>
+        </field>
+
+        <field name="country" formElement="input">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="default" xsi:type="string">BR</item>
+                </item>
+            </argument>
+            <settings>
+                <label translate="true">Country (ISO code)</label>
+                <dataType>text</dataType>
+            </settings>
+        </field>
+
+        <field name="latitude" formElement="input">
+            <settings>
+                <label translate="true">Latitude</label>
+                <notice translate="true">Required. Decimal value (e.g. -25.4284167). In Brazil always negative. Tip: in Google Maps, right-click the exact spot → click the coordinates that appear at the top of the menu to copy both.</notice>
+                <dataType>text</dataType>
+                <validation>
+                    <rule name="required-entry" xsi:type="boolean">true</rule>
+                </validation>
+            </settings>
+        </field>
+
+        <field name="longitude" formElement="input">
+            <settings>
+                <label translate="true">Longitude</label>
+                <notice translate="true">Required. Decimal value (e.g. -49.2733056). In Brazil always negative.</notice>
+                <dataType>text</dataType>
+                <validation>
+                    <rule name="required-entry" xsi:type="boolean">true</rule>
+                </validation>
+            </settings>
+        </field>
+
+        <field name="instructions" formElement="textarea">
+            <settings>
+                <label translate="true">Pickup Instructions</label>
+                <notice translate="true">Notes shown to the driver at pickup.</notice>
+                <dataType>text</dataType>
+            </settings>
+        </field>
+    </fieldset>
+
+    <!-- ============ OPERATING HOURS ============ -->
+    <fieldset name="hours">
+        <settings>
+            <label translate="true">Operating Hours</label>
+            <collapsible>true</collapsible>
+            <opened>false</opened>
+            <additionalClasses>
+                <class name="entrega99-hours">true</class>
+            </additionalClasses>
+        </settings>
+
+        <field name="monday_open" formElement="select">
+            <settings><label translate="true">Monday — open</label><dataType>text</dataType></settings>
+            <formElements><select><settings><options class="MageShop\Entrega99\Model\Config\Source\HourOption"/></settings></select></formElements>
+        </field>
+        <field name="monday_close" formElement="select">
+            <settings><label translate="true">Monday — close</label><dataType>text</dataType></settings>
+            <formElements><select><settings><options class="MageShop\Entrega99\Model\Config\Source\HourOption"/></settings></select></formElements>
+        </field>
+        <field name="tuesday_open" formElement="select">
+            <settings><label translate="true">Tuesday — open</label><dataType>text</dataType></settings>
+            <formElements><select><settings><options class="MageShop\Entrega99\Model\Config\Source\HourOption"/></settings></select></formElements>
+        </field>
+        <field name="tuesday_close" formElement="select">
+            <settings><label translate="true">Tuesday — close</label><dataType>text</dataType></settings>
+            <formElements><select><settings><options class="MageShop\Entrega99\Model\Config\Source\HourOption"/></settings></select></formElements>
+        </field>
+        <field name="wednesday_open" formElement="select">
+            <settings><label translate="true">Wednesday — open</label><dataType>text</dataType></settings>
+            <formElements><select><settings><options class="MageShop\Entrega99\Model\Config\Source\HourOption"/></settings></select></formElements>
+        </field>
+        <field name="wednesday_close" formElement="select">
+            <settings><label translate="true">Wednesday — close</label><dataType>text</dataType></settings>
+            <formElements><select><settings><options class="MageShop\Entrega99\Model\Config\Source\HourOption"/></settings></select></formElements>
+        </field>
+        <field name="thursday_open" formElement="select">
+            <settings><label translate="true">Thursday — open</label><dataType>text</dataType></settings>
+            <formElements><select><settings><options class="MageShop\Entrega99\Model\Config\Source\HourOption"/></settings></select></formElements>
+        </field>
+        <field name="thursday_close" formElement="select">
+            <settings><label translate="true">Thursday — close</label><dataType>text</dataType></settings>
+            <formElements><select><settings><options class="MageShop\Entrega99\Model\Config\Source\HourOption"/></settings></select></formElements>
+        </field>
+        <field name="friday_open" formElement="select">
+            <settings><label translate="true">Friday — open</label><dataType>text</dataType></settings>
+            <formElements><select><settings><options class="MageShop\Entrega99\Model\Config\Source\HourOption"/></settings></select></formElements>
+        </field>
+        <field name="friday_close" formElement="select">
+            <settings><label translate="true">Friday — close</label><dataType>text</dataType></settings>
+            <formElements><select><settings><options class="MageShop\Entrega99\Model\Config\Source\HourOption"/></settings></select></formElements>
+        </field>
+        <field name="saturday_open" formElement="select">
+            <settings><label translate="true">Saturday — open</label><dataType>text</dataType></settings>
+            <formElements><select><settings><options class="MageShop\Entrega99\Model\Config\Source\HourOption"/></settings></select></formElements>
+        </field>
+        <field name="saturday_close" formElement="select">
+            <settings><label translate="true">Saturday — close</label><dataType>text</dataType></settings>
+            <formElements><select><settings><options class="MageShop\Entrega99\Model\Config\Source\HourOption"/></settings></select></formElements>
+        </field>
+        <field name="sunday_open" formElement="select">
+            <settings><label translate="true">Sunday — open</label><dataType>text</dataType></settings>
+            <formElements><select><settings><options class="MageShop\Entrega99\Model\Config\Source\HourOption"/></settings></select></formElements>
+        </field>
+        <field name="sunday_close" formElement="select">
+            <settings><label translate="true">Sunday — close</label><dataType>text</dataType></settings>
+            <formElements><select><settings><options class="MageShop\Entrega99\Model\Config\Source\HourOption"/></settings></select></formElements>
+        </field>
+    </fieldset>
+</form>

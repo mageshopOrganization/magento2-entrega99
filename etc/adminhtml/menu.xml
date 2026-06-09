@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!--
+ * MageShop | Entrega99
+ *
+ * @vendor  MageShop
+ * @package Entrega99
+ -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <!-- Single entry under Stores → Settings, alongside All Stores / Configuration / Terms / Order Status -->
+        <add id="MageShop_Entrega99::waypoint"
+             title="Pickup Locations (99Entrega)"
+             translate="title"
+             module="MageShop_Entrega99"
+             sortOrder="100"
+             parent="Magento_Backend::stores_settings"
+             action="entrega99/waypoint/index"
+             resource="MageShop_Entrega99::waypoint"/>
+    </menu>
+</config>

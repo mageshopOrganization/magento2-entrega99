@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<!--
+ * MageShop | Entrega99
+ *
+ * @vendor  MageShop
+ * @package Entrega99
+ -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <carriers>
+            <entrega99>
+                <active>0</active>
+                <model>MageShop\Entrega99\Model\Carrier\Entrega99</model>
+                <name>99Entrega</name>
+                <title>99Entrega</title>
+                <description>Entrega via 99 (motoboy/carro)</description>
+                <sort_order>20</sort_order>
+                <sallowspecific>0</sallowspecific>
+                <specificcountry>BR</specificcountry>
+                <showmethod>1</showmethod>
+                <specificerrmsg>This shipping method is not available. Please contact us.</specificerrmsg>
+
+                <!-- Environment & credentials -->
+                <environment>sandbox</environment>
+                <api_url>https://entrega.99app.com/entrega-openplatform</api_url>
+                <client_id backend_model="Magento\Config\Model\Config\Backend\Encrypted"/>
+                <client_secret backend_model="Magento\Config\Model\Config\Backend\Encrypted"/>
+                <token_scope>entrega.order</token_scope>
+
+                <!-- Webhook -->
+                <webhook_signing_key backend_model="Magento\Config\Model\Config\Backend\Encrypted"/>
+
+                <!-- Delivery defaults -->
+                <vehicle_type>entrega_moto</vehicle_type>
+                <need_pickup_code>1</need_pickup_code>
+                <need_dropoff_code>1</need_dropoff_code>
+                <return_handover_method>1</return_handover_method>
+                <automatic_shipment>0</automatic_shipment>
+                <free_shipping>0</free_shipping>
+                <promise_time>20</promise_time>
+
+                <!-- Geocoder -->
+                <geocoder_provider>nominatim</geocoder_provider>
+                <google_maps_api_key backend_model="Magento\Config\Model\Config\Backend\Encrypted"/>
+                <nominatim_user_agent>MageShop-Entrega99/1.0</nominatim_user_agent>
+
+                <!-- Logging -->
+                <debug_log>0</debug_log>
+            </entrega99>
+        </carriers>
+    </default>
+</config>

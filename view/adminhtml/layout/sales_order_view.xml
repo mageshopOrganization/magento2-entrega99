@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!--
+ * MageShop | Entrega99
+ *
+ * @vendor  MageShop
+ * @package Entrega99
+ -->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="order_additional_info">
+            <block class="MageShop\Entrega99\Block\Adminhtml\Order\View\ShipmentInfo"
+                   name="entrega99.order.shipment_info"
+                   template="MageShop_Entrega99::order/view/shipment_info.phtml"/>
+        </referenceContainer>
+    </body>
+</page>

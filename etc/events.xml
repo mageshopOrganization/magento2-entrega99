@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<!--
+ * MageShop | Entrega99
+ *
+ * @vendor  MageShop
+ * @package Entrega99
+ -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+
+    <!-- Persist OrderShipment placeholder + resolve waypoint when order is placed -->
+    <event name="sales_order_place_before">
+        <observer name="mageshop_entrega99_order_place_before"
+                  instance="MageShop\Entrega99\Observer\SalesOrderPlaceBefore"/>
+    </event>
+
+    <!-- Sync manual cancellation in Magento → cancel on 99Entrega -->
+    <event name="sales_order_save_after">
+        <observer name="mageshop_entrega99_order_save_after"
+                  instance="MageShop\Entrega99\Observer\SalesOrderSaveAfter"/>
+    </event>
+
+</config>

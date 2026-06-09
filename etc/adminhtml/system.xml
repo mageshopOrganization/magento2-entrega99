@@ -1,0 +1,169 @@
+<?xml version="1.0"?>
+<!--
+ * MageShop | Entrega99
+ *
+ * @vendor  MageShop
+ * @package Entrega99
+ -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="carriers">
+            <group id="entrega99" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>99Entrega</label>
+
+                <!-- ========== GENERAL ========== -->
+                <field id="active" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Enabled</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Enables 99Entrega as a shipping option in the checkout.</comment>
+                </field>
+                <field id="title" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Title</label>
+                    <comment>Group title shown to the customer at checkout (e.g. "99Entrega").</comment>
+                </field>
+                <field id="description" translate="label comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Description (method title shown to customer)</label>
+                    <comment>Method title shown next to the price in the checkout (e.g. "Entrega via moto - ~30 min").</comment>
+                </field>
+                <field id="sort_order" translate="label comment" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Sort Order</label>
+                    <comment>Display order relative to other shipping methods. Lower values appear first.</comment>
+                </field>
+                <field id="environment" translate="label comment" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Environment</label>
+                    <source_model>MageShop\Entrega99\Model\Config\Source\Environment</source_model>
+                    <comment>Use the credentials matching the selected environment in the 99Entrega portal (Modo de desenvolvedor).</comment>
+                </field>
+
+                <!-- ========== API CREDENTIALS ========== -->
+                <group id="api" translate="label" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>API Credentials</label>
+                    <field id="client_id" translate="label comment" type="obscure" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Client ID</label>
+                        <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                        <config_path>carriers/entrega99/client_id</config_path>
+                        <comment>OAuth Client ID obtained from the 99Entrega portal (Modo de desenvolvedor). Use the credentials matching the selected Environment.</comment>
+                    </field>
+                    <field id="client_secret" translate="label comment" type="obscure" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Client Secret</label>
+                        <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                        <config_path>carriers/entrega99/client_secret</config_path>
+                        <comment>OAuth Client Secret obtained from the 99Entrega portal. Stored encrypted in the database.</comment>
+                    </field>
+                    <field id="api_url" translate="label comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>API Base URL</label>
+                        <config_path>carriers/entrega99/api_url</config_path>
+                        <comment>Default: https://entrega.99app.com/entrega-openplatform — only change if instructed by 99 support.</comment>
+                    </field>
+                    <field id="token_scope" translate="label comment" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>OAuth Scope</label>
+                        <config_path>carriers/entrega99/token_scope</config_path>
+                        <comment>OAuth scope requested for the access token. Keep the default (entrega.order) unless instructed otherwise.</comment>
+                    </field>
+                </group>
+
+                <!-- ========== WEBHOOK ========== -->
+                <group id="webhook" translate="label" sortOrder="200" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Webhook</label>
+                    <field id="endpoint" translate="label comment" type="label" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Webhook URL</label>
+                        <frontend_model>MageShop\Entrega99\Block\Adminhtml\System\Config\WebhookEndpoint</frontend_model>
+                        <comment>Use this URL on the 99Entrega portal webhook configuration. Read-only.</comment>
+                    </field>
+                    <field id="webhook_signing_key" translate="label comment" type="obscure" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Signing Key (Chave de assinatura)</label>
+                        <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                        <config_path>carriers/entrega99/webhook_signing_key</config_path>
+                        <comment>Same value as "Chave de assinatura" in the 99Entrega portal. Used to validate X-Webhook-Signature.</comment>
+                    </field>
+                </group>
+
+                <!-- ========== DELIVERY OPTIONS ========== -->
+                <group id="delivery" translate="label" sortOrder="300" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Delivery Options</label>
+                    <field id="vehicle_type" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Vehicle Type</label>
+                        <source_model>MageShop\Entrega99\Model\Config\Source\VehicleType</source_model>
+                        <config_path>carriers/entrega99/vehicle_type</config_path>
+                        <comment>Vehicle category requested for the delivery. Affects coverage and price (motorcycle is cheaper but limited to small packages).</comment>
+                    </field>
+                    <field id="need_pickup_code" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Require Pickup Code</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>carriers/entrega99/need_pickup_code</config_path>
+                        <comment>If enabled, the driver must enter a 4-digit code at the store to receive the package. Adds an extra verification step at pickup.</comment>
+                    </field>
+                    <field id="need_dropoff_code" translate="label comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Require Dropoff Code</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>carriers/entrega99/need_dropoff_code</config_path>
+                        <comment>If enabled, the customer must show a 4-digit code at delivery for the driver to release the package. Adds an extra verification step at dropoff.</comment>
+                    </field>
+                    <field id="return_handover_method" translate="label comment" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Return Handover Method</label>
+                        <source_model>MageShop\Entrega99\Model\Config\Source\HandoverMethod</source_model>
+                        <config_path>carriers/entrega99/return_handover_method</config_path>
+                        <comment>How the return is confirmed when the delivery fails and the package goes back to the store: None / Photo / Code.</comment>
+                    </field>
+                    <field id="automatic_shipment" translate="label comment" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Auto-create shipment</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>carriers/entrega99/automatic_shipment</config_path>
+                        <comment>If enabled, calls /order/create automatically when order is placed. If disabled, must be triggered manually from the order view.</comment>
+                    </field>
+                    <field id="free_shipping" translate="label comment" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Honor Free Shipping</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>carriers/entrega99/free_shipping</config_path>
+                        <comment>When the cart qualifies for free shipping (cart rules etc.), display the 99Entrega method with R$ 0,00 to the customer. The actual fee is still charged to the store.</comment>
+                    </field>
+                    <field id="promise_time" translate="label comment" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Promise time (minutes)</label>
+                        <config_path>carriers/entrega99/promise_time</config_path>
+                        <comment>Padding minutes added to the estimated delivery time shown in checkout.</comment>
+                    </field>
+                </group>
+
+                <!-- ========== GEOCODER ========== -->
+                <group id="geocoder" translate="label" sortOrder="400" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Geocoder</label>
+                    <field id="geocoder_provider" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Provider</label>
+                        <source_model>MageShop\Entrega99\Model\Config\Source\GeocoderProvider</source_model>
+                        <config_path>carriers/entrega99/geocoder_provider</config_path>
+                        <comment>99Entrega requires latitude/longitude. Nominatim (OSM) is free but rate-limited. Google Maps is paid but more reliable.</comment>
+                    </field>
+                    <field id="google_maps_api_key" translate="label comment" type="obscure" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Google Maps API Key</label>
+                        <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                        <config_path>carriers/entrega99/google_maps_api_key</config_path>
+                        <comment>API key from Google Cloud Console with the Geocoding API enabled. Has a free tier (~10k requests/month) before billing applies.</comment>
+                        <depends>
+                            <field id="geocoder_provider">google_maps</field>
+                        </depends>
+                    </field>
+                    <field id="nominatim_user_agent" translate="label comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Nominatim User-Agent</label>
+                        <config_path>carriers/entrega99/nominatim_user_agent</config_path>
+                        <comment>Required by Nominatim usage policy. Include your contact info if possible.</comment>
+                        <depends>
+                            <field id="geocoder_provider">nominatim</field>
+                        </depends>
+                    </field>
+                </group>
+
+                <!-- ========== ADVANCED / LOGGING ========== -->
+                <group id="advanced" translate="label" sortOrder="500" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Advanced</label>
+                    <field id="debug_log" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Debug Log</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>carriers/entrega99/debug_log</config_path>
+                        <comment>When enabled, writes verbose API/webhook traces to var/log/entrega99.log.</comment>
+                    </field>
+                </group>
+            </group>
+        </section>
+    </system>
+</config>
